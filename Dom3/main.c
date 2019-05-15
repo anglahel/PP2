@@ -23,6 +23,7 @@ char *getln()
                 if(tmp == NULL)
                 {
                     free(line);
+                    printf("Failed to reallocate mem");
                     line = NULL;
                     break;
                 }
@@ -35,7 +36,8 @@ char *getln()
     tmp = realloc(line, (index+1)*sizeof(char));
     if(tmp == NULL)
     {
-        free(line);
+        free(line); 
+        printf("Failed to reallocate mem");
         line = NULL;
     }
     tmp[index] = '\0';
@@ -64,6 +66,7 @@ char **getlines(int *n, int *exit)
             if(tmp == NULL)
             {
                 free(lines);
+                printf("Failed to reallocate mem");
                 lines = NULL;
                 break;
             }
@@ -76,6 +79,7 @@ char **getlines(int *n, int *exit)
     tmp = realloc(lines, (index)*sizeof(char*));
     if(tmp == NULL)
     {
+        printf("Failed to reallocate mem");
         free(lines);
         lines = NULL;
     }
@@ -124,6 +128,15 @@ void translate(char *line)
     }
 }
 
+void freemem(char **lines, int n)
+{
+    for(int i = 0; i < n; ++i)
+    {
+        free(lines[i]);
+    }
+    free(lines);
+}
+
 int main(void)
 {
     int exit = 0;
@@ -137,6 +150,7 @@ int main(void)
             translate(lines[i]);
         }
         printf("\n");
+        freemem(lines, n);
     }
     return 0;
 }
