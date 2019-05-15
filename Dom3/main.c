@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 
 #define STEP 5;
@@ -39,6 +40,7 @@ char *getln()
     }
     tmp[index] = '\0';
     line = tmp;
+
     return line;
 }
 
@@ -49,15 +51,16 @@ char **getlines(int *n, int *exit)
     char *l = getln();
     while(strncmp(l, "\n", strlen(l)))
     {
-        if(strncmp(l, "Dosta Brus Li", strlen(l)))
+        if(!strncmp(l, "dosta Brus Li", strlen(l)))
         {
             *exit = 1;
             break; 
         }
+
         if(index >= size)
         {
             size += STEP;
-            tmp = realloc(lines, sizeof(char*));
+            tmp = realloc(lines, size*sizeof(char*));
             if(tmp == NULL)
             {
                 free(lines);
@@ -68,6 +71,7 @@ char **getlines(int *n, int *exit)
         lines = tmp;
         lines[index++] = l;
         l = getln();
+
     }
     tmp = realloc(lines, (index)*sizeof(char*));
     if(tmp == NULL)
@@ -80,6 +84,46 @@ char **getlines(int *n, int *exit)
     return lines;
 }
 
+void translate(char *line)
+{
+    char *ifstart = "if";
+    char *then = "then begin";
+    char *end = "end;";
+    char *i = strstr(line, ifstart);
+    char *t = strstr(line, then);
+    char *e = strstr(line, end);
+    ptrdiff_t new_size = 0;
+    
+    if(i && t && e)
+    { 
+        line[2] = '(';
+        *(t-1) = ')';
+        *t = ' ';
+        *(t+1) = '{';
+        char* tmp1 = t+2;
+        char* tmp2 = t+10;
+        while(tmp2 != e)
+        { 
+            *(tmp1) = *(tmp2);
+            tmp1++;
+            tmp2++;
+        }
+        *tmp1 = '}';
+        *(tmp1+1) = ';';
+        *(tmp1+2) = '\0';
+        new_size = tmp1 - line + 3;
+         //printf("%ld new size\t", new_size);
+        char *tmp = NULL;
+        tmp = realloc(line, new_size*sizeof(char));
+        line = tmp;
+        printf("%s\n", line);
+    }
+    else
+    {
+        printf("Not valid if statement!\n");
+    }
+}
+
 int main(void)
 {
     int exit = 0;
@@ -89,11 +133,10 @@ int main(void)
         char **lines = getlines(&n, &exit);
         for(int i = 0; i < n; ++i)
         {
-            if(lines[i][0] == 'i' && lines[i][1] == 'f')
-            {
-
-            }
+            printf("%s\t-->\t", lines[i]);
+            translate(lines[i]);
         }
+        printf("\n");
     }
     return 0;
 }
