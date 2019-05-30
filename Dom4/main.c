@@ -70,6 +70,10 @@ int main(void)
             case (10):
                 printlist(schedule);
                 break;
+            case (11):
+                freelist(list);
+                printf("List deleted!");
+                break;
             default:
                 printhelp();
                 break;
@@ -105,6 +109,8 @@ int main(void)
 
     printlist(list);
 */
+    freelist(list);
+    freelist(schedule);
 
     return 0;
 }
