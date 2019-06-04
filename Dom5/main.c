@@ -1,4 +1,6 @@
 #include "main.h"
+#include <time.h>
+
 
 void printhelp()
 {
@@ -16,7 +18,24 @@ void printhelp()
 
 
 int main(int argc, char** argv)
-{ 
+{
+    clock_t start, end;
+    start = clock();
+    time_t t = time(NULL);
+    struct tm* currentLocal = localtime(&t);
+    char* timestring = calloc(101, sizeof(char));
+    if(currentLocal && timestring)
+    {
+        strftime(timestring, 100, "%H:%M:%S", currentLocal);
+        printf("Start time:%s\n", timestring);
+    }
+
+    if(argc != 3)
+    {
+        printf("Invalid commandline args!\n");
+    }
+    printf("FPS:%lf\n", FPS_NUM);
+
     MPlist* inlist = NULL;
     DVDlist* outlist = NULL;
 
@@ -75,6 +94,18 @@ int main(int argc, char** argv)
     freedvd(outlist);
     freemp(inlist);
 
+    t = time(NULL);
+    currentLocal = localtime(&t);
+    if(currentLocal && timestring)
+    {
+        strftime(timestring, 100, "%H:%M:%S", currentLocal);
+        printf("Start time:%s\n", timestring);
+    }
+
+
+    end = clock();
+    double elapsed = ((double)(end-start)) / CLOCKS_PER_SEC;
+    printf("Exe time:%lf\n", elapsed);
 
     return 0;
 }

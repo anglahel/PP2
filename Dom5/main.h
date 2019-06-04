@@ -7,9 +7,9 @@
 #include <math.h>
 
 #ifdef NTSC
-#define FPS_NUM 25
+#define FPS_NUM 23.976
 #else
-#define FPS_NUM 25
+#define FPS_NUM 25.0
 #endif
 
 #define MAX_LEN 100

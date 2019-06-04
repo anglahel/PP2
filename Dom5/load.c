@@ -8,7 +8,7 @@ MPlist* load_mplist(FILE* input)
     {
         double wait, duration;
         sscanf(tmp, "%lf %lf", &wait, &duration);
-        char* text = malloc(MAX_LEN*sizeof(char));
+        char* text = calloc(MAX_LEN, sizeof(char));
         while(fgets(tmp, MAX_LEN+1, input) && strcmp(tmp, "\n"))
         {
             strcat(text, tmp);
